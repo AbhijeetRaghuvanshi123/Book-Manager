@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Manager</title>
+</head>
+<body>
+    <script>
+        function Book(title, author, pages, read){
+            if(!new.target){
+                throw Error("You must use the 'new' operator to call constructor");
+            }
+            this.title = title;
+            this.pages = pages;
+            this.author = author;
+            this.read = read;
+
+            this.info = function(){
+                console.log(`${this.title} by ${this.author}, ${this.pages} pages, ${this.read ? 'you have read book' : 'not read yet'}`)
+            }
+        }
+
+        const book1 = new Book('Never Split the Difference', 'Chris Voss', 288, false);
+        book1.info();
+    </script>
+</body>
+</html>
