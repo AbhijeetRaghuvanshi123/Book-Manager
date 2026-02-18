@@ -1,176 +1,273 @@
-* {
+/* =========================
+   RESET & GLOBAL
+========================= */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+}
+
+:root {
+    --primary: #1b5e20;
+    --primary-light: #4caf50;
+    --secondary: #cddc39;
+    --background: #f5f7f6;
+    --white: #ffffff;
+    --border: #2e7d32;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+body {
     font-family: 'Roboto', sans-serif;
+    background-color: var(--background);
 }
 
+/* =========================
+   ICONS
+========================= */
 .material-symbols-outlined {
-  font-variation-settings:
-  'FILL' 1,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 24,
+    font-variation-settings:
+        'FILL' 1,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24;
 }
 
-.container{
+/* =========================
+   LAYOUT
+========================= */
+.container {
     display: grid;
-    grid-template-columns: 1fr repeat(1, 4fr);
+    grid-template-columns: 300px 1fr;
 }
 
-.header{
+.header {
+    grid-column: 1 / -1;
     display: flex;
     align-items: center;
-    color: white;
-    padding: 15px;
-    padding-left: 50px;
-    grid-column: 1 / 3;
-    background-color: green;
     gap: 15px;
+    padding: 0 40px;
     height: 80px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-    z-index: 10;
+    background-color: var(--primary);
+    color: var(--white);
+    box-shadow: var(--shadow);
 }
 
-.header > .material-symbols-outlined{
-    font-size: 50px;
+.header .material-symbols-outlined {
+    font-size: 42px;
 }
 
-.add-book-header{
+/* =========================
+   SIDEBAR (ADD BOOK)
+========================= */
+.add-book {
+    background-color: var(--primary-light);
+    padding: 25px;
+    color: var(--white);
     display: flex;
-    font-size: 25px;
-    align-items: center;
-    gap: 15px;
-    padding-bottom: 10px;
-    margin-bottom: 15px;
-    border-bottom: 2px solid rgba(0,0,0,0.2);
-}
-
-
-.add-book-header > .material-symbols-outlined{
-    font-size: 35px;
-}
-
-.add-book{
-    color: white;
-    padding: 15px;
-    grid-column: 1 / 2;
-    background-color: yellowgreen;
-    height: auto;
+    flex-direction: column;
     height: calc(100vh - 80px);
 }
 
-.add-form{
-    display: flex;
-    padding: 15px;
-    flex-direction: column;
-    gap: 30px;
-}
-
-.book-list{
-    color: white;
-    padding: 15px;
-    background-color: yellow;
-}
-
-label{
-    font-size: 20px;
+.add-book-header {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
+    font-size: 22px;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
 }
 
-input{
+.add-book-header .material-symbols-outlined {
+    font-size: 30px;
+}
+
+.add-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 18px;
+    position: relative;
+}
+
+/* =========================
+   INPUTS
+========================= */
+input[type="text"],
+input[type="number"] {
+    width: 100%;
     border: none;
-    border-bottom: 1px solid darkgreen;
-    background-color: yellowgreen;
-    font-size: 20px;
+    border-bottom: 2px solid var(--primary);
+    background: transparent;
+    font-size: 18px;
+    padding: 6px 4px;
+    color: var(--white);
 }
 
 input:focus {
     outline: none;
-    border-bottom: 2px solid darkgreen; 
+    border-bottom-color: var(--white);
 }
 
-.form-group label {
-    position: relative;
-}
-
+/* Custom Checkbox */
 #read {
     position: absolute;
     opacity: 0;
-    height: 0;
-    width: 0;
 }
 
-
 .checkmark {
-    height: 25px;
-    width: 25px;
-    background-color: #eee;
+    height: 22px;
+    width: 22px;
+    background-color: var(--white);
     border-radius: 4px;
+    position: relative;
+    cursor: pointer;
 }
 
 #read:checked + .checkmark {
-    background-color: green;
+    background-color: var(--primary);
 }
 
 .checkmark::after {
     content: "";
     position: absolute;
     display: none;
+    left: 7px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid var(--white);
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
 }
 
 #read:checked + .checkmark::after {
     display: block;
 }
 
-.checkmark::after {
-    left: 9px;
-    top: 5px;
-    width: 5px;
-    height: 10px;
-    border: solid white;
-    border-width: 0 3px 3px 0;
-    transform: rotate(45deg);
-}
-
+/* =========================
+   BUTTONS
+========================= */
 button {
-  background-color: darkgreen;
-  font-size: 25px;
-  color: white;
-  border: none;
-  border-radius: 50px;
-  padding: 8px 25px;
-  cursor: pointer;
-  transition: background 0.3s;
+    background-color: var(--primary);
+    color: var(--white);
+    border: none;
+    border-radius: 40px;
+    padding: 8px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.25s ease;
 }
 
-.submit-section{
+button:hover {
+    background-color: #124417;
+    transform: translateY(-2px);
+}
+
+.submit-section {
     display: flex;
-    padding: 15px;
     justify-content: center;
 }
 
-.action-buttons button:hover {
-  background-color: darkgreen;
+/* =========================
+   MAIN CONTENT
+========================= */
+.book-list {
+    background-color: var(--secondary);
+    padding: 30px;
 }
 
-.filters{
+.filters {
     display: flex;
-    padding: 15px;
-    font-size: 25px;
-    justify-content: end;
-    gap: 30px;
+    justify-content: space-between;
     align-items: center;
+    margin-bottom: 20px;
+}
+
+.filter-btns {
+    display: flex;
+    gap: 10px;
+}
+
+.filter-btns button {
+    font-size: 14px;
+    padding: 6px 15px;
+}
+
+/* =========================
+   TABLE
+========================= */
+.books h2 {
     margin-bottom: 15px;
-    border-bottom: 2px solid rgba(0,0,0,0.2);
 }
 
-.filter-btns > button{
-    font-size: 15px;
-}
-
-.table{
+table {
     width: 100%;
+    border-collapse: collapse;
+    background-color: var(--white);
+    box-shadow: var(--shadow);
+}
+
+th,
+td {
+    padding: 14px;
+    text-align: left;
+}
+
+th {
+    background-color: var(--primary);
+    color: var(--white);
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.read-status {
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.read-status:hover {
+    text-decoration: underline;
+}
+
+.delete {
+    text-align: center;
+    cursor: pointer;
+}
+
+.delete:hover {
+    color: red;
+}
+
+/* =========================
+   STATS
+========================= */
+.stats {
+    margin-top: 25px;
+    background: var(--white);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.stats h3 {
+    margin-bottom: 15px;
+}
+
+.stats > div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 16px;
 }
