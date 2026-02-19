@@ -110,129 +110,131 @@
     </div>
 
     <script>
-        const library = [];
+        class Book{
 
-        function Book(title, author, pages, read) {
-            if (!new.target) {
-                throw new Error("Use 'new' to create a Book.");
+            constructor(title, author, pages, read){
+                this.id = crypto.randomUUID();
+                this.title = title;
+                this.author = author;
+                this.pages = pages;
+                this.read = read; // boolean
             }
-
-            this.id = crypto.randomUUID();
-            this.title = title;
-            this.author = author;
-            this.pages = pages;
-            this.read = read; // boolean
-        }
-
-        Book.prototype.toggleRead = function () {
-            this.read = !this.read;
-        };
-
-        const form = document.querySelector(".add-form");
-        const tableBody = document.querySelector("#table-rows");
-
-        const totalBooksEl = document.querySelector(".total-books h6");
-        const readBooksEl = document.querySelector(".read-books h6");
-        const unreadBooksEl = document.querySelector(".unread-books h6");
-
-        form.addEventListener("submit", function (e) {
-            e.preventDefault();
-            addBook();
-            form.reset();
-        });
-
-        tableBody.addEventListener("click", function (e) {
-            const row = e.target.closest("tr");
-            if (!row) return;
-
-            const id = row.dataset.id;
-
-            if (e.target.closest(".delete")) {
-                deleteBook(id);
-            }
-
-            if (e.target.classList.contains("read-status")) {
-                toggleReadStatus(id);
-            }
-        });
-
-        function addBook() {
-            const formData = new FormData(form);
-
-            const title = formData.get("title");
-            const author = formData.get("author");
-            const pages = formData.get("pages");
-            const read = formData.get("read") === "on";
-
-            const book = new Book(title, author, pages, read);
-            library.push(book);
-
-            render();
-        }
-
-        function deleteBook(id) {
-            const index = library.findIndex(function (book) {
-                return book.id === id;
-            });
-
-            if (index !== -1) {
-                library.splice(index, 1);
-                render();
+            
+            toggleRead(){
+                this.read = !this.read;
             }
         }
 
-        function toggleReadStatus(id) {
-            const book = library.find(function (book) {
-                return book.id === id;
-            });
+        class LibraryApp{
+            constructor(){
+                this.library = [];
 
-            if (book) {
-                book.toggleRead();
-                render();
+                this.form = document.querySelector(".add-form");
+                this.tableBody = document.querySelector("#table-rows");
+
+                this.totalBooksEl = document.querySelector(".total-books h6");
+                this.readBooksEl = document.querySelector(".read-books h6");
+                this.unreadBooksEl = document.querySelector(".unread-books h6");
+
+                this.init();
+            }
+
+            init(){
+                this.form.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    this.addBook();
+                    this.form.reset();
+                });
+
+                this.tableBody.addEventListener("click", (e) => {
+                    const row = e.target.closest("tr");
+                    if (!row) return;
+
+                    const id = row.dataset.id;
+
+                    if (e.target.closest(".delete")) {
+                        this.deleteBook(id);
+                    }
+
+                    if (e.target.classList.contains("read-status")) {
+                        this.toggleReadStatus(id);
+                    }
+                });
+            }
+
+            addBook() {
+                const formData = new FormData(this.form);
+
+                const title = formData.get("title");
+                const author = formData.get("author");
+                const pages = formData.get("pages");
+                const read = formData.get("read") === "on";
+
+                const book = new Book(title, author, pages, read);
+                this.library.push(book);
+
+                this.render();
+            }
+
+            deleteBook(id) {
+                this.library = this.library.filter(book => book.id != id);
+                this.render();
+            }
+
+            toggleReadStatus(id) {
+                const book = this.library.find(book => book.id === id);
+
+                if (book) {
+                    book.toggleRead();
+                    this.render();
+                }
+            }
+
+            render() {
+                this.renderTable();
+                this.renderStats();
+            }
+
+            renderTable() {
+                this.tableBody.innerHTML = "";
+
+                this.library.forEach((book) => {
+                    const row = document.createElement("tr");
+                    row.dataset.id = book.id;
+
+                    row.innerHTML = `
+                        <td>${book.title}</td>
+                        <td>${book.author}</td>
+                        <td>${book.pages}</td>
+                        <td class="read-status" style="cursor:pointer;">
+                            ${book.read ? "Read" : "Unread"}
+                        </td>
+                        <td class="delete" style="cursor:pointer;">
+                            <span class="material-symbols-outlined">delete</span>
+                        </td>
+                    `;
+
+                    this.tableBody.appendChild(row);
+                });
+            }
+
+            renderStats() {
+                const total = this.library.length;
+
+                const readCount = this.library.filter(function (book) {
+                    return book.read;
+                }).length;
+
+                const unreadCount = total - readCount;
+
+                this.totalBooksEl.textContent = "Total: " + total;
+                this.readBooksEl.textContent = "Read: " + readCount;
+                this.unreadBooksEl.textContent = "Unread: " + unreadCount;
             }
         }
 
-        function render() {
-            renderTable();
-            renderStats();
-        }
+        new LibraryApp();
 
-        function renderTable() {
-            tableBody.innerHTML = "";
-
-            library.forEach(function (book) {
-                const row = document.createElement("tr");
-                row.dataset.id = book.id;
-
-                row.innerHTML = `
-                    <td>${book.title}</td>
-                    <td>${book.author}</td>
-                    <td>${book.pages}</td>
-                    <td class="read-status" style="cursor:pointer;">
-                        ${book.read ? "Read" : "Unread"}
-                    </td>
-                    <td class="delete" style="cursor:pointer;">
-                        <span class="material-symbols-outlined">delete</span>
-                    </td>
-                `;
-
-                tableBody.appendChild(row);
-            });
-        }
-
-        function renderStats() {
-            const total = library.length;
-
-            const readCount = library.filter(function (book) {
-                return book.read;
-            }).length;
-
-            const unreadCount = total - readCount;
-
-            totalBooksEl.textContent = "Total: " + total;
-            readBooksEl.textContent = "Read: " + readCount;
-            unreadBooksEl.textContent = "Unread: " + unreadCount;
-        }
 </script>
 
 </body>
