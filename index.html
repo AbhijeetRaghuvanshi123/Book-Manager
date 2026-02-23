@@ -31,7 +31,7 @@
                         <span class="material-symbols-outlined">title</span>
                         <p>Book Name</p>
                     </label>
-                    <input type="text" id="title" name="title" required>
+                    <input type="text" id="title" name="title" required minlength="4" maxlength="20">
                 </div>
 
                 <div class="form-group">
@@ -47,7 +47,7 @@
                         <span class="material-symbols-outlined">article_person</span>
                         <p>Author Name</p>
                     </label>
-                    <input type="text" id="author" name="author" required>
+                    <input type="text" id="author" name="author" required minlength="3">
                 </div>
 
                 <div class="form-group">
@@ -110,6 +110,27 @@
     </div>
 
     <script>
+        //Form Validations
+        const booktitle = document.getElementById("title");
+        booktitle.addEventListener("input", (e) => {
+            if(booktitle.validity.tooShort){
+                booktitle.setCustomValidity("Book name is too short buddy");
+            }else if(booktitle.validity.tooLong){
+                booktitle.setCustomValidity("Book name is too long buddy");
+            }else{
+                booktitle.setCustomValidity("");
+            }
+        })
+
+        const bookauthor = document.getElementById("author");
+        bookauthor.addEventListener("input", (e) => {
+            if(bookauthor.validity.tooShort){
+                bookauthor.setCustomValidity("Author name is too short buddy");
+            }else{
+                bookauthor.setCustomValidity("");
+            }
+        })
+
         class Book{
 
             constructor(title, author, pages, read){
@@ -234,6 +255,8 @@
         }
 
         new LibraryApp();
+
+
 
 </script>
 
